@@ -80,6 +80,7 @@ jobs:
           docker tag $ORIGINAL_IMAGE $NEW_TAG
           echo "Retagged image: $NEW_TAG"
 
+
       # 3. 列出并打印当前环境中所有可用的本地镜像
       - name: List all local images
         run: docker images
