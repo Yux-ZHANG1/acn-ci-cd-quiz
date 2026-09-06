@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - dev
 
 jobs:
   # ==================== CI 阶段 ====================
@@ -55,11 +56,8 @@ jobs:
   # ==================== CD 阶段 ====================
   cd-phase:
     needs: ci-phase
-    strategy:
-      matrix:
-        environment: [DEV, PROD]
     runs-on: ubuntu-latest
-    environment: ${{ matrix.environment }}
+    environment: ${{ github.ref == 'refs/heads/main' && 'PROD' || 'DEV' }}
 
     steps:
       # 1. 下载之前上传的 tar 归档文件
@@ -79,7 +77,6 @@ jobs:
           NEW_TAG="${ORIGINAL_IMAGE}${{ vars.suffix }}"
           docker tag $ORIGINAL_IMAGE $NEW_TAG
           echo "Retagged image: $NEW_TAG"
-
 
       # 3. 列出并打印当前环境中所有可用的本地镜像
       - name: List all local images
